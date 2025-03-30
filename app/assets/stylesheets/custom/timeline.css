@@ -8,22 +8,11 @@
   padding-left: 2rem;
 }
 
-.timeline::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 10px;
-  width: 2px;
-  background-color: var(--border-color);
-}
-
 .timeline-item {
   padding: 10px 0 10px 30px;
   position: relative;
-  border-left: 2px solid var(--border-color);
   margin-left: 10px;
-  margin-bottom: 1rem;
+  border-left: 2px solid var(--border-color);
 }
 
 .timeline-item:last-child {
