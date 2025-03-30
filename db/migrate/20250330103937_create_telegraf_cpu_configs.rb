@@ -4,18 +4,18 @@ class CreateTelegrafCpuConfigs < ActiveRecord::Migration[7.2]
       t.string :description
       t.string :interval, default: "10s"
       t.boolean :active, default: true
-      
+
       # CPU specific settings
       t.boolean :percpu, default: true
       t.boolean :totalcpu, default: true
       t.boolean :collect_cpu_time, default: false
       t.boolean :report_active, default: false
-      
+
       # Remote host monitoring
       t.text :remote_hosts
       t.boolean :use_ssh
       t.string :ssh_user
-      
+
       t.timestamps
     end
 
@@ -23,16 +23,16 @@ class CreateTelegrafCpuConfigs < ActiveRecord::Migration[7.2]
       t.string :description
       t.string :interval, default: "10s"
       t.boolean :active, default: true
-      
+
       # Memory specific settings
       t.boolean :swap_memory, default: true
       t.boolean :platform_memory, default: true
-      
+
       # Remote host monitoring
       t.text :remote_hosts
       t.boolean :use_ssh
       t.string :ssh_user
-      
+
       t.timestamps
     end
 
