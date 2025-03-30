@@ -22,7 +22,7 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Active admin
-gem "activeadmin", "3.2.0"
+gem "activeadmin", "3.3.0"
 
 # Plus integrations with:
 gem "devise"
