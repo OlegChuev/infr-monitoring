@@ -1,0 +1,69 @@
+version: '3.9'
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  volumes:
+    - .:/app
+    - bundle_cache:/usr/local/bundle
+  environment:
+    RAILS_ENV: development
+    NODE_ENV: development
+    WEB_CONCURRENCY: 0
+    INFLUXDB_URL: http://influxdb:8086
+    INFLUXDB_TOKEN: your-super-secret-token
+    INFLUXDB_ORG: monitoring
+    INFLUXDB_BUCKET: metrics
+  stdin_open: true
+  tty: true
+  depends_on:
+    - influxdb
+
+services:
+  web:
+    <<: *backend
+    ports:
+      - 3005:3000
+    command: bash -c "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p 3000"
+
+  influxdb:
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password123
+      - DOCKER_INFLUXDB_INIT_ORG=monitoring
+      - DOCKER_INFLUXDB_INIT_BUCKET=metrics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your-super-secret-token
+
+  telegraf:
+    image: telegraf:1.28
+    volumes:
+      - ./config/telegraf:/etc/telegraf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.ssh:/root/.ssh:ro  # Mount SSH keys for remote access
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUX_TOKEN=your-super-secret-token
+      - INFLUX_ORG=monitoring
+      - INFLUX_BUCKET=metrics
+      - INFLUX_URL=http://influxdb:8086
+      # Add Docker-specific environment variables
+      - HOST_PROC=/host/proc
+      - HOST_SYS=/host/sys
+      - HOST_ETC=/host/etc
+    # Use privileged mode to access Docker socket
+    user: "root"
+    privileged: true
+
+volumes:
+  bundle_cache:
+  influxdb_data:
+  influxdb_config:
