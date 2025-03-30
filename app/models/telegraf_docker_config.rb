@@ -15,8 +15,8 @@ class TelegrafDockerConfig < ApplicationRecord
   # Add validations for remote monitoring
   validates :ssh_user, presence: true, if: -> { use_ssh? && remote_hosts.present? }
   validates :remote_hosts, format: {
-    with: /\A[a-zA-Z0-9\-\.,]+\z/,
-    message: "must contain only hostnames, IPs, and commas"
+    with: /\A[a-zA-Z0-9\-\.:,]+\z/,
+    message: "must contain only hostnames, IPs, ports, and commas"
   }, allow_blank: true
 
   # Add remote host fields
@@ -24,8 +24,9 @@ class TelegrafDockerConfig < ApplicationRecord
   attribute :use_ssh, :boolean, default: false
   attribute :ssh_user, :string
 
-  after_save -> { TelegrafConfigGenerator.generate(self, config) }
-  after_destroy -> { TelegrafConfigRemover.remove(self) }
+  # Update the callbacks
+  after_save -> { TelegrafConfigService.generate(self, config) }
+  after_destroy -> { TelegrafConfigService.remove(self) }
 
   private
 

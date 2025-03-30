@@ -11,12 +11,13 @@ class TelegrafMemoryConfig < ApplicationRecord
   # Add validations for remote monitoring
   validates :ssh_user, presence: true, if: -> { use_ssh? && remote_hosts.present? }
   validates :remote_hosts, format: {
-    with: /\A[a-zA-Z0-9\-\.,]+\z/,
-    message: "must contain only hostnames, IPs, and commas"
+    with: /\A[a-zA-Z0-9\-\.:,]+\z/,
+    message: "must contain only hostnames, IPs, ports, and commas"
   }, allow_blank: true
 
-  after_save -> { TelegrafConfigGenerator.generate(self, config) }
-  after_destroy -> { TelegrafConfigRemover.remove(self) }
+  # Update the callbacks
+  after_save -> { TelegrafConfigService.generate(self, config) }
+  after_destroy -> { TelegrafConfigService.remove(self) }
 
   private
 
@@ -37,13 +38,17 @@ class TelegrafMemoryConfig < ApplicationRecord
 
       if use_ssh && ssh_user.present?
         # SSH-based monitoring
-        hosts.each do |host|
+        hosts.each do |host_entry|
+          # Parse host and port (if specified)
+          host, port = host_entry.split(":")
+          port ||= 22 # Default to port 22 if not specified
+          
           memory_config += <<~TOML
 
             # Remote Memory monitoring via SSH for #{host}
             [[inputs.exec]]
               commands = [
-                "ssh #{ssh_user}@#{host} 'free -m'"
+                "ssh -p #{port} #{ssh_user}@#{host} 'free -m'"
               ]
               timeout = "5s"
               interval = "#{interval}"
@@ -57,12 +62,15 @@ class TelegrafMemoryConfig < ApplicationRecord
         end
       else
         # HTTP-based monitoring
-        hosts.each do |host|
+        hosts.each do |host_entry|
+          # For HTTP monitoring, we can use the host:port directly
+          host = host_entry.split(":").first # Just extract the host part for the tag
+          
           memory_config += <<~TOML
 
-            # Remote Memory monitoring via HTTP for #{host}
+            # Remote Memory monitoring via HTTP for #{host_entry}
             [[inputs.http]]
-              urls = ["http://#{host}:9273/metrics"]
+              urls = ["http://#{host_entry}:9273/metrics"]
               timeout = "5s"
               interval = "#{interval}"
               data_format = "prometheus"

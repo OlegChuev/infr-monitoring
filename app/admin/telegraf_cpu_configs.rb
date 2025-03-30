@@ -22,7 +22,20 @@ ActiveAdmin.register TelegrafCpuConfig do
             data: { confirm: "Are you sure you want to delete this CPU monitoring configuration?" }
   end
 
-  # Update the form to include remote host fields
+  index title: "CPU Monitoring Configurations" do
+    selectable_column
+    id_column
+    column :description
+    column :interval
+    column :percpu
+    column :totalcpu
+    column :collect_cpu_time
+    column :report_active
+    column :active
+    column :created_at
+    actions
+  end
+
   form title: "CPU Monitoring Configuration" do |f|
     f.inputs "CPU Monitoring Configuration" do
       f.input :description
@@ -40,7 +53,7 @@ ActiveAdmin.register TelegrafCpuConfig do
 
     f.inputs "Remote Host Monitoring" do
       f.input :remote_hosts,
-              hint: "Comma-separated list of remote hosts to monitor (e.g., 192.168.1.10,server2.example.com)"
+              hint: "Comma-separated list of remote hosts to monitor (e.g., 192.168.1.10:2222,server2.example.com)"
       f.input :use_ssh,
               hint: "Use SSH for remote monitoring (requires SSH keys setup)"
       f.input :ssh_user,

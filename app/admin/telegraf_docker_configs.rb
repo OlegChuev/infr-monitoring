@@ -58,7 +58,7 @@ ActiveAdmin.register TelegrafDockerConfig do
 
     f.inputs "Remote Host Monitoring" do
       f.input :remote_hosts,
-              hint: "Comma-separated list of remote hosts to monitor (e.g., 192.168.1.10,server2.example.com)"
+              hint: "Comma-separated list of remote hosts to monitor (e.g., 192.168.1.10:2222,server2.example.com)"
       f.input :use_ssh,
               hint: "Use SSH for remote monitoring (requires SSH keys setup)"
       f.input :ssh_user,
