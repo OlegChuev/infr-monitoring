@@ -1,95 +1,17 @@
-/* General form styling */
-.questionnaire-form {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Center the text */
-}
+/* Main custom CSS file that imports all modular CSS files */
+/* This file is kept for backward compatibility */
 
-.form-title {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  color: #333;
-}
+/* The styles are now organized in the custom/ directory */
 
-.question-item {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center each question */
-  justify-content: center;
-}
+@import "custom/base";
+@import "custom/charts";
+@import "custom/dashboard";
+@import "custom/forms";
+@import "custom/tables";
+@import "custom/timeline";
+@import "custom/login";
 
-.question-title {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.question-options {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center options vertically */
-  justify-content: center;
-}
-
-.radio-label, .form-radio {
-  margin-right: 10px;
-}
-
-.form-control {
-  width: 80%; /* Make text area width more manageable */
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  text-align: center; /* Center the text in text area */
-}
-
-.form-check {
-  margin-bottom: 10px;
-  text-align: center; /* Center radio buttons */
-}
-
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.progress-bar {
-  height: 10px;
-  background: #e0e0e0;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 10px;
-  background: #007bff;
-  width: 0%; /* Dynamically set via Rails/JS */
-}
-
-.form-actions {
-  padding-top: 16px;
-}
+/* Modern UI enhancements */
+@import "custom/animations";
+@import "custom/dark-mode";
+@import "custom/responsive";

@@ -1,0 +1,114 @@
+/* Dark Mode Styling */
+
+/* Apply dark mode when .dark-mode class is added to body or when user prefers dark color scheme */
+@media (prefers-color-scheme: dark) {
+  body.auto-dark-mode,
+  body.dark-mode {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --border-color: #333;
+    --highlight-color: #0077ff;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --error-color: #e74c3c;
+    --shadow-color: rgba(0,0,0,0.3);
+  }
+  
+  body.auto-dark-mode,
+  body.dark-mode {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  /* Cards and containers */
+  body.auto-dark-mode .dashboard-card,
+  body.auto-dark-mode .chart-container,
+  body.auto-dark-mode .timeline-card,
+  body.auto-dark-mode .panel,
+  body.auto-dark-mode .sidebar_section,
+  body.auto-dark-mode #active_admin_content,
+  body.dark-mode .dashboard-card,
+  body.dark-mode .chart-container,
+  body.dark-mode .timeline-card,
+  body.dark-mode .panel,
+  body.dark-mode .sidebar_section,
+  body.dark-mode #active_admin_content {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 10px var(--shadow-color);
+  }
+  
+  /* Text colors */
+  body.auto-dark-mode h1, body.auto-dark-mode h2, body.auto-dark-mode h3,
+  body.auto-dark-mode h4, body.auto-dark-mode h5, body.auto-dark-mode h6,
+  body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+  body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+    color: var(--text-color);
+  }
+  
+  /* Tables */
+  body.auto-dark-mode table.index_table th,
+  body.dark-mode table.index_table th {
+    background: #252525;
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  
+  body.auto-dark-mode table.index_table td,
+  body.dark-mode table.index_table td {
+    border-color: var(--border-color);
+  }
+  
+  body.auto-dark-mode table.index_table tr.even td,
+  body.dark-mode table.index_table tr.even td {
+    background: #222;
+  }
+  
+  body.auto-dark-mode table.index_table tr:hover td,
+  body.dark-mode table.index_table tr:hover td {
+    background: #2a2a2a;
+  }
+  
+  /* Forms */
+  body.auto-dark-mode form input[type="text"],
+  body.auto-dark-mode form input[type="password"],
+  body.auto-dark-mode form input[type="email"],
+  body.auto-dark-mode form input[type="number"],
+  body.auto-dark-mode form input[type="url"],
+  body.auto-dark-mode form input[type="tel"],
+  body.auto-dark-mode form textarea,
+  body.auto-dark-mode form select,
+  body.dark-mode form input[type="text"],
+  body.dark-mode form input[type="password"],
+  body.dark-mode form input[type="email"],
+  body.dark-mode form input[type="number"],
+  body.dark-mode form input[type="url"],
+  body.dark-mode form input[type="tel"],
+  body.dark-mode form textarea,
+  body.dark-mode form select {
+    background: #252525;
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+  
+  /* Dark mode toggle */
+  .dark-mode-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--highlight-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+}

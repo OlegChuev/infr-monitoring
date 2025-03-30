@@ -187,45 +187,45 @@ ActiveAdmin.setup do |config|
   #
   config.localize_format = :long
 
-    # == Setting a Favicon
-    #
-    # config.favicon = 'favicon.ico'
+  # == Setting a Favicon
+  #
+  # config.favicon = 'favicon.ico'
 
-    # == Meta Tags
-    #
-    # Add additional meta tags to the head element of active admin pages.
-    #
-    # Add tags to all pages logged in users see:
-    #   config.meta_tags = { author: 'My Company' }
+  # == Meta Tags
+  #
+  # Add additional meta tags to the head element of active admin pages.
+  #
+  # Add tags to all pages logged in users see:
+  #   config.meta_tags = { author: 'My Company' }
 
-    # By default, sign up/sign in/recover password pages are excluded
-    # from showing up in search engine results by adding a robots meta
-    # tag. You can reset the hash of meta tags included in logged out
-    # pages:
-    #   config.meta_tags_for_logged_out_pages = {}
+  # By default, sign up/sign in/recover password pages are excluded
+  # from showing up in search engine results by adding a robots meta
+  # tag. You can reset the hash of meta tags included in logged out
+  # pages:
+  #   config.meta_tags_for_logged_out_pages = {}
 
-    # == Removing Breadcrumbs
-    #
-    # Breadcrumbs are enabled by default. You can customize them for individual
-    # resources or you can disable them globally from here.
-    #
-    # config.breadcrumb = false
+  # == Removing Breadcrumbs
+  #
+  # Breadcrumbs are enabled by default. You can customize them for individual
+  # resources or you can disable them globally from here.
+  #
+  # config.breadcrumb = false
 
-    # == Create Another Checkbox
-    #
-    # Create another checkbox is disabled by default. You can customize it for individual
-    # resources or you can enable them globally from here.
-    #
-    # config.create_another = true
+  # == Create Another Checkbox
+  #
+  # Create another checkbox is disabled by default. You can customize it for individual
+  # resources or you can enable them globally from here.
+  #
+  # config.create_another = true
 
-    # == Register Stylesheets & Javascripts
-    #
-    # We recommend using the built in Active Admin layout and loading
-    # up your own stylesheets / javascripts to customize the look
-    # and feel.
-    #
-    # To load a stylesheet:
-    config.register_stylesheet "custom.css"
+  # == Register Stylesheets & Javascripts
+  #
+  # We recommend using the built in Active Admin layout and loading
+  # up your own stylesheets / javascripts to customize the look
+  # and feel.
+  #
+  # To load a stylesheet:
+  config.register_stylesheet "custom.css"
   #
   # You can provide an options hash for more control, which is passed along to stylesheet_link_tag():
   #   config.register_stylesheet 'my_print_stylesheet.css', media: :print
@@ -334,7 +334,6 @@ ActiveAdmin.setup do |config|
   # By default, the footer shows the current Active Admin version. You can
   # override the content of the footer here.
   #
-  # config.footer = 'my custom footer text'
 
   # == Sorting
   #

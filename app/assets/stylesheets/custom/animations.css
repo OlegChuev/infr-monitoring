@@ -1,0 +1,54 @@
+/* Animations and Transitions */
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Subtle hover effects for cards */
+.dashboard-card,
+.chart-container,
+.timeline-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover,
+.chart-container:hover,
+.timeline-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Button hover effects */
+.button, 
+a.button, 
+button,
+input[type="submit"],
+input[type="button"] {
+  transition: all 0.2s ease;
+}
+
+.button:hover, 
+a.button:hover, 
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Pulse animation for notifications */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.notification-badge {
+  animation: pulse 2s infinite;
+}

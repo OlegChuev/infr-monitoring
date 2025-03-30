@@ -1,0 +1,100 @@
+/* Zen-like Minimalist Chart Styles with Purple Theme */
+
+.chart-container {
+  height: 250px;
+  margin-bottom: 20px;
+  background: var(--primary-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  padding: 15px;
+  border: 1px solid var(--border-color);
+}
+
+.chart-header {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--primary-text);
+}
+
+.chart-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 0.5rem;
+}
+
+/* Chart Tooltips */
+.chart-tooltip {
+  background-color: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  padding: 0.5rem;
+  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+}
+
+/* Tabs styling for charts */
+.ui-tabs {
+  padding: 0;
+  border: none;
+}
+
+.ui-tabs .ui-tabs-nav {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 0;
+  padding: 0;
+}
+
+.ui-tabs .ui-tabs-nav li {
+  background: none;
+  border: none;
+  margin: 0 5px 0 0;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+  padding: 10px 15px;
+  color: var(--secondary-text);
+  transition: var(--transition);
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-bottom: none;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a {
+  color: var(--accent-color);
+}
+
+.ui-tabs .ui-tabs-panel {
+  padding: 15px 0 0 0;
+}

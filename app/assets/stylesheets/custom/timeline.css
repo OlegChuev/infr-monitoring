@@ -1,0 +1,106 @@
+/* Zen-like Minimalist Timeline Styles with Purple Theme */
+
+.timeline {
+  position: relative;
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 0 0 20px;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 10px;
+  width: 2px;
+  background-color: var(--border-color);
+}
+
+.timeline-item {
+  padding: 10px 0 10px 30px;
+  position: relative;
+  border-left: 2px solid var(--border-color);
+  margin-left: 10px;
+  margin-bottom: 1rem;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-item:before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 12px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary-bg);
+  border: 2px solid var(--accent-color);
+  z-index: 1;
+}
+
+.timeline-date {
+  font-size: 12px;
+  color: var(--secondary-text);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-content {
+  margin-top: 5px;
+  color: var(--primary-text);
+}
+
+.timeline-title {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--primary-text);
+}
+
+.timeline-description {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}
+
+/* Activity feed */
+.activity-feed {
+  padding: 0;
+  list-style-type: none;
+}
+
+.activity-feed li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.activity-feed li:last-child {
+  border-bottom: none;
+}
+
+.activity-icon {
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+  margin-right: 10px;
+  color: var(--accent-color);
+}
+
+/* Timeline Status Colors */
+.timeline-marker.info {
+  background-color: var(--accent-color);
+}
+
+.timeline-marker.success {
+  background-color: var(--success-color);
+}
+
+.timeline-marker.warning {
+  background-color: var(--warning-color);
+}
+
+.timeline-marker.error {
+  background-color: var(--error-color);
+}

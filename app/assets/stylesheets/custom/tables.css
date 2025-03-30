@@ -1,0 +1,172 @@
+/* Zen-like Minimalist Table Styles with Purple Theme */
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 1.5rem;
+  font-size: 14px;
+}
+
+table.index_table {
+  border: 1px solid var(--border-color);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: var(--primary-bg);
+}
+
+table.index_table th {
+  background-color: var(--secondary-bg);
+  color: var(--primary-text);
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+  text-transform: none;
+}
+
+table.index_table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  vertical-align: middle;
+}
+
+table.index_table tr:last-child td {
+  border-bottom: none;
+}
+
+table.index_table tr.even td {
+  background-color: var(--secondary-bg);
+}
+
+table.index_table tr:hover td {
+  background-color: rgba(155, 89, 182, 0.05);
+}
+
+/* Table Actions */
+.table_actions {
+  white-space: nowrap;
+}
+
+.table_actions a {
+  margin-right: 0.5rem;
+  display: inline-block;
+  padding: 5px 10px;
+  background: var(--secondary-bg);
+  border-radius: 3px;
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.table_actions a:hover {
+  background: var(--tertiary-bg);
+  color: var(--accent-dark);
+}
+
+/* Table action buttons */
+.table-action {
+  margin-right: 10px;
+  padding: 3px 8px;
+  background: var(--secondary-bg);
+  border-radius: 3px;
+  text-decoration: none;
+  color: var(--accent-color);
+  font-size: 12px;
+  transition: var(--transition);
+}
+
+.table-action:hover {
+  background: var(--tertiary-bg);
+  color: var(--accent-dark);
+}
+
+/* Empty Tables */
+.blank_slate {
+  text-align: center;
+  padding: 2rem;
+  color: var(--secondary-text);
+  background-color: var(--secondary-bg);
+  border-radius: var(--card-radius);
+}
+
+/* No data message */
+.no-data-message {
+  padding: 20px;
+  text-align: center;
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
+/* Pagination */
+.pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.pagination a, 
+.pagination span.page.current {
+  display: inline-block;
+  padding: 5px 12px;
+  margin: 0 2px;
+  border-radius: var(--card-radius);
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.pagination span.page.current {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: white;
+}
+
+.pagination a:hover {
+  background: var(--tertiary-bg);
+  color: var(--accent-color);
+}
+
+/* Resource usage bars */
+.usage-bar-container {
+  width: 100%;
+  background-color: var(--tertiary-bg);
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+.usage-bar {
+  height: 10px;
+  border-radius: 4px;
+}
+
+.usage-low {
+  background-color: var(--success-color);
+}
+
+.usage-medium {
+  background-color: var(--warning-color);
+}
+
+.usage-high {
+  background-color: var(--error-color);
+}
+
+.usage-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--secondary-text);
+}
+
+/* Status tags */
+.status-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
