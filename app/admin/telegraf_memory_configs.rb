@@ -32,14 +32,13 @@ ActiveAdmin.register TelegrafMemoryConfig do
     column :description
     column :interval
     column :active
-    column :created_at
+
     actions
   end
 
   filter :description
   filter :interval
   filter :active
-  filter :created_at
 
   form title: "New RAM" do |f|
     f.inputs "RAM Monitoring Configuration" do
@@ -81,8 +80,6 @@ ActiveAdmin.register TelegrafMemoryConfig do
       row :use_ssh
       row :ssh_user
       row :active
-      row :created_at
-      row :updated_at
     end
   end
 end

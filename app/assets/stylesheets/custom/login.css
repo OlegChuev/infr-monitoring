@@ -16,22 +16,29 @@ body.active_admin_logged_out {
   position: relative;
 }
 
+body.logged_out #content_wrapper {
+  width: 400px;
+}
+
+body.logged_out #content_wrapper #active_admin_content {
+  padding: 0 !important;
+}
+
+body.logged_out #login form fieldset li {
+  display: flex;
+  justify-content: space-between;
+}
+
+body.logged_out #login form fieldset li {
+  width: 100%;
+}
+
 #content_wrapper {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   overflow: hidden;
   background: white;
   position: relative;
-}
-
-#content_wrapper::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(to right, var(--accent-color), var(--accent-dark));
 }
 
 #login {

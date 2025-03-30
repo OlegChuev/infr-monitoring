@@ -90,7 +90,6 @@ fieldset.inputs legend {
 
 fieldset.inputs ol > li {
   padding: 15px;
-  border-bottom: 1px solid var(--border-color);
 }
 
 fieldset.inputs ol > li:last-child {

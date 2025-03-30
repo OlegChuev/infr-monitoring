@@ -92,7 +92,3 @@
 .ui-tabs .ui-tabs-nav li.ui-tabs-active a {
   color: var(--accent-color);
 }
-
-.ui-tabs .ui-tabs-panel {
-  padding: 15px 0 0 0;
-}

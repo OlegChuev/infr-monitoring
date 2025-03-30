@@ -28,14 +28,13 @@ ActiveAdmin.register TelegrafDockerConfig do
     column :description
     column :interval
     column :active
-    column :created_at
+
     actions
   end
 
   filter :description
   filter :interval
   filter :active
-  filter :created_at
 
   form title: "New Docker Monitoring Configuration" do |f|
     f.inputs "Docker Monitoring Configuration" do
@@ -85,8 +84,6 @@ ActiveAdmin.register TelegrafDockerConfig do
       row :total
       row :gather_services
       row :active
-      row :created_at
-      row :updated_at
     end
   end
 end

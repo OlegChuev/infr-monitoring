@@ -32,7 +32,7 @@ ActiveAdmin.register TelegrafCpuConfig do
     column :collect_cpu_time
     column :report_active
     column :active
-    column :created_at
+
     actions
   end
 
@@ -82,8 +82,6 @@ ActiveAdmin.register TelegrafCpuConfig do
       row :use_ssh
       row :ssh_user
       row :active
-      row :created_at
-      row :updated_at
     end
   end
 end

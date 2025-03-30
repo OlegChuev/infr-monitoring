@@ -98,6 +98,7 @@ table.index_table tr:hover td {
   text-align: center;
   color: var(--secondary-text);
   font-style: italic;
+  margin: 0;
 }
 
 /* Pagination */
