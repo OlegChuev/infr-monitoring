@@ -1,6 +1,7 @@
 {
-  "name": "infrastructure-monitoring",
-  "private": "true",
-  "scripts": {
+  "name": "infr-monitoring",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^3.7.1"
   }
 }

@@ -74,14 +74,6 @@ Configure memory monitoring with the following options:
 - Platform memory: Include platform-specific memory metrics
 - Remote hosts: Monitor memory on remote servers
 
-### Docker Monitoring
-
-Configure Docker container monitoring with the following options:
-- Interval: How often to collect metrics
-- Container inclusion/exclusion: Specify which containers to monitor
-- Per-device metrics: Collect detailed metrics for each device
-- Remote hosts: Monitor Docker on remote servers
-
 ## Remote Host Monitoring
 
 The application supports monitoring remote hosts using:
