@@ -1,4 +1,14 @@
-version: '3.9'
+x-hosts:
+  &extra-hosts
+  dockerhost: 172.17.0.1
+
+x-influxdb-config: &influxdb-config
+  INFLUXDB_URL: http://influxdb:8086
+  INFLUXDB_TOKEN: your-super-secret-token
+  INFLUXDB_ORG: monitoring
+  INFLUXDB_BUCKET: infr
+  INFLUXDB_USER: admin
+  INFLUXDB_PASSWORD: password123
 
 x-backend: &backend
   build:
@@ -7,14 +17,12 @@ x-backend: &backend
   volumes:
     - .:/app
     - bundle_cache:/usr/local/bundle
+    - node_modules:/app/node_modules
   environment:
     RAILS_ENV: development
     NODE_ENV: development
     WEB_CONCURRENCY: 0
-    INFLUXDB_URL: http://influxdb:8086
-    INFLUXDB_TOKEN: your-super-secret-token
-    INFLUXDB_ORG: monitoring
-    INFLUXDB_BUCKET: metrics
+    <<: *influxdb-config
   stdin_open: true
   tty: true
   depends_on:
@@ -25,7 +33,25 @@ services:
     <<: *backend
     ports:
       - 3005:3000
-    command: bash -c "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p 3000"
+    command: bash -c "rm -f tmp/pids/server.pid && bin/rails db:prepare && bin/rails server -b 0.0.0.0 -p 3000"
+
+  sidekiq:
+    <<: *backend
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    ports: []
+    environment:
+      <<: *influxdb-config
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - redis
+      - web
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
 
   influxdb:
     image: influxdb:2.7
@@ -36,11 +62,11 @@ services:
       - influxdb_config:/etc/influxdb2
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password123
-      - DOCKER_INFLUXDB_INIT_ORG=monitoring
-      - DOCKER_INFLUXDB_INIT_BUCKET=metrics
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=your-super-secret-token
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USER:-admin}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD:-password123}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG:-monitoring}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET:-metrics}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_TOKEN:-your-super-secret-token}
 
   telegraf:
     image: telegraf:1.28
@@ -50,20 +76,34 @@ services:
       - ~/.ssh:/root/.ssh:ro  # Mount SSH keys for remote access
     depends_on:
       - influxdb
+    extra_hosts: *extra-hosts
     environment:
-      - INFLUX_TOKEN=your-super-secret-token
-      - INFLUX_ORG=monitoring
-      - INFLUX_BUCKET=metrics
-      - INFLUX_URL=http://influxdb:8086
-      # Add Docker-specific environment variables
-      - HOST_PROC=/host/proc
-      - HOST_SYS=/host/sys
-      - HOST_ETC=/host/etc
+      <<: *influxdb-config
+      HOST_PROC: /host/proc
+      HOST_SYS: /host/sys
+      HOST_ETC: /host/etc
     # Use privileged mode to access Docker socket
-    user: "root"
+    user: root
+    entrypoint: "telegraf"
     privileged: true
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    depends_on:
+      - influxdb
 
 volumes:
   bundle_cache:
   influxdb_data:
   influxdb_config:
+  node_modules:
+  grafana_data:
+  redis_data:

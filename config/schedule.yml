@@ -1,0 +1,4 @@
+metrics_collection:
+  cron: "* * * * *"  # Every minute
+  class: "AlertMonitoringWorker"
+  queue: monitoring

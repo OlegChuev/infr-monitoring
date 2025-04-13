@@ -59,3 +59,8 @@ end
 
 # Add this line to your Gemfile
 gem "influxdb", "~> 0.8.0"
+
+# Background processing
+gem 'sidekiq', '~> 7.2'
+gem 'sidekiq-cron', '~> 1.10'
+gem 'redis', '~> 5.0'
