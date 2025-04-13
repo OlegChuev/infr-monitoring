@@ -10,12 +10,8 @@ class TelegrafMemoryConfig < ApplicationRecord
 
   # Add validations for remote monitoring
   validates :ssh_user, presence: true, if: -> { use_ssh? && remote_hosts.present? }
-  validates :remote_hosts, format: {
-    with: /\A[a-zA-Z0-9\-\.:,]+\z/,
-    message: "must contain only hostnames, IPs, ports, and commas"
-  }, allow_blank: true
+  validates :remote_hosts, format: { with: /\A[a-zA-Z0-9\-\.:,]+\z/, message: "must contain only hostnames, IPs, ports, and commas" }, allow_blank: true
 
-  # Update the callbacks
   after_save -> { TelegrafConfigService.generate(self, config) }
   after_destroy -> { TelegrafConfigService.remove(self) }
 
@@ -24,59 +20,37 @@ class TelegrafMemoryConfig < ApplicationRecord
   def config
     return unless active?
 
-    # Basic Memory monitoring config
+    # Basic memory monitoring config
     memory_config = <<~TOML
       [[inputs.mem]]
         interval = "#{interval}"
-        swap_memory = #{swap_memory}
-        platform_memory = #{platform_memory}
     TOML
 
     # Add remote host monitoring if configured
     if remote_hosts.present?
-      hosts = remote_hosts.split(",").map(&:strip)
+      parsed_hosts = RemoteHostParser.parse_hosts(remote_hosts)
 
       if use_ssh && ssh_user.present?
         # SSH-based monitoring
-        hosts.each do |host_entry|
-          # Parse host and port (if specified)
-          host, port = host_entry.split(":")
-          port ||= 22 # Default to port 22 if not specified
-          
+        parsed_hosts.each do |parsed_host|
+          command = RemoteHostParser.generate_ssh_command(parsed_host, ssh_user, "cat /proc/meminfo")
+          host_display = RemoteHostParser.format_host_for_display(parsed_host)
+
           memory_config += <<~TOML
 
-            # Remote Memory monitoring via SSH for #{host}
+            # Remote memory monitoring via SSH for #{host_display}
             [[inputs.exec]]
               commands = [
-                "ssh -p #{port} #{ssh_user}@#{host} 'free -m'"
+                "#{command}"
               ]
               timeout = "5s"
               interval = "#{interval}"
               data_format = "value"
               data_type = "string"
-              name_override = "memory_remote_#{host.gsub('.', '_')}"
+              name_override = "memory_remote_#{parsed_host[:host].gsub('.', '_')}"
             #{'  '}
               [inputs.exec.tags]
-                host = "#{host}"
-          TOML
-        end
-      else
-        # HTTP-based monitoring
-        hosts.each do |host_entry|
-          # For HTTP monitoring, we can use the host:port directly
-          host = host_entry.split(":").first # Just extract the host part for the tag
-          
-          memory_config += <<~TOML
-
-            # Remote Memory monitoring via HTTP for #{host_entry}
-            [[inputs.http]]
-              urls = ["http://#{host_entry}:9273/metrics"]
-              timeout = "5s"
-              interval = "#{interval}"
-              data_format = "prometheus"
-            #{'  '}
-              [inputs.http.tags]
-                host = "#{host}"
+                host = "#{parsed_host[:host]}"
           TOML
         end
       end

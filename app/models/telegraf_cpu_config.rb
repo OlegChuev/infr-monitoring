@@ -10,10 +10,7 @@ class TelegrafCpuConfig < ApplicationRecord
 
   # Add validations for remote monitoring
   validates :ssh_user, presence: true, if: -> { use_ssh? && remote_hosts.present? }
-  validates :remote_hosts, format: {
-    with: /\A[a-zA-Z0-9\-\.:,]+\z/,
-    message: "must contain only hostnames, IPs, ports, and commas"
-  }, allow_blank: true
+  validates :remote_hosts, format: { with: /\A[a-zA-Z0-9\-\.:,]+\z/, message: "must contain only hostnames, IPs, ports, and commas" }, allow_blank: true
 
   after_save -> { TelegrafConfigService.generate(self, config) }
   after_destroy -> { TelegrafConfigService.remove(self) }
@@ -34,45 +31,30 @@ class TelegrafCpuConfig < ApplicationRecord
     TOML
 
     # Add remote host monitoring if configured
-    if remote_hosts.present?
-      hosts = remote_hosts.split(",").map(&:strip)
+    if remote_hosts.present? && use_ssh && ssh_user.present?
+      parsed_hosts = RemoteHostParser.parse_hosts(remote_hosts)
 
-      if use_ssh && ssh_user.present?
-        # SSH-based monitoring
-        hosts.each do |host|
-          cpu_config += <<~TOML
+      # SSH-based monitoring
+      parsed_hosts.each do |parsed_host|
+        command = RemoteHostParser.generate_ssh_command(parsed_host, ssh_user, "cat /proc/stat | grep cpu")
+        host_display = RemoteHostParser.format_host_for_display(parsed_host)
 
-            # Remote CPU monitoring via SSH for #{host}
-            [[inputs.exec]]
-              commands = [
-                "ssh #{ssh_user}@#{host} 'cat /proc/stat | grep cpu'"
-              ]
-              timeout = "5s"
-              interval = "#{interval}"
-              data_format = "value"
-              data_type = "string"
-              name_override = "cpu_remote_#{host.gsub('.', '_')}"
-            #{'  '}
-              [inputs.exec.tags]
-                host = "#{host}"
-          TOML
-        end
-      else
-        # HTTP-based monitoring
-        hosts.each do |host|
-          cpu_config += <<~TOML
+        cpu_config += <<~TOML
 
-            # Remote CPU monitoring via HTTP for #{host}
-            [[inputs.http]]
-              urls = ["http://#{host}:9273/metrics"]
-              timeout = "5s"
-              interval = "#{interval}"
-              data_format = "prometheus"
-            #{'  '}
-              [inputs.http.tags]
-                host = "#{host}"
-          TOML
-        end
+          # Remote CPU monitoring via SSH for #{host_display}
+          [[inputs.exec]]
+            commands = [
+              "#{command}"
+            ]
+            timeout = "5s"
+            interval = "#{interval}"
+            data_format = "value"
+            data_type = "string"
+            name_override = "cpu_remote_#{parsed_host[:host].gsub('.', '_')}"
+          #{'  '}
+            [inputs.exec.tags]
+              host = "#{parsed_host[:host]}"
+        TOML
       end
     end
 

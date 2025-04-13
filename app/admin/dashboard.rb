@@ -132,32 +132,6 @@ ActiveAdmin.register_page "Dashboard" do
                 para "No remote RAM configs configured", class: "no-data-message"
               end
             end
-
-            tab "Docker Monitoring" do
-              configs = MonitoringConfigService.recent_configurations(:docker)
-
-              if configs.any?
-                table_for configs do
-                  column("Description") { |config| config.description }
-                  column("Interval") { |config| config.interval }
-                  column("Status") { |config| status_tag(config.active? ? "Active" : "Inactive", class: config.active? ? "status-ok" : "status-error") }
-                  column("Actions") do |config|
-                    span do
-                      [
-                        link_to("View", admin_telegraf_docker_config_path(config), class: "table-action"),
-                        link_to("Edit", edit_admin_telegraf_docker_config_path(config), class: "table-action")
-                      ].join.html_safe
-                    end
-                  end
-                end
-
-                div class: "panel-footer" do
-                  link_to "View All Docker Configurations", admin_telegraf_docker_configs_path, class: "view-all-link"
-                end
-              else
-                para "No remote Docker configs configured", class: "no-data-message"
-              end
-            end
           end
         end
       end
@@ -206,27 +180,6 @@ ActiveAdmin.register_page "Dashboard" do
     end
 
     columns do
-      column do
-        panel "Recent Activity", class: "interactive-panel" do
-          div class: "timeline" do
-            # In a real app, you'd fetch actual activity data
-            sample_activities = [
-              { date: 2.hours.ago, content: "CPU monitoring configuration updated" },
-              { date: 5.hours.ago, content: "New Docker monitoring added" },
-              { date: 1.day.ago, content: "Remote host added to monitoring" },
-              { date: 2.days.ago, content: "System restarted" }
-            ]
-
-            sample_activities.each do |activity|
-              div class: "timeline-item" do
-                div(class: "timeline-date") { I18n.l(activity[:date], format: :short) }
-                div(class: "timeline-content") { activity[:content] }
-              end
-            end
-          end
-        end
-      end
-
       column do
         panel "Quick Actions", class: "interactive-panel" do
           div class: "quick-actions" do
@@ -284,13 +237,12 @@ ActiveAdmin.register_page "Dashboard" do
   end
 
   page_action :host_details, method: :get do
-    @host = params[:remote_host]
+    @host = params[:host]
     metrics_service = MetricsService.new(@host)
-    details = metrics_service.detailed_metrics
+    details = metrics_service.basic_metrics
 
     @cpu_data = details[:cpu_data]
     @mem_data = details[:mem_data]
-    @disk_data = details[:disk_data]
     @connection_error = details[:error]
 
     respond_to do |format|
