@@ -4,6 +4,8 @@ class NetworkService
 
   class << self
     def check_host_availability(host, port: 80, timeout: 1)
+      return "Offline" if host.nil? || host.empty?
+
       host, port = host.split(":") if host.include?(":")
 
       begin

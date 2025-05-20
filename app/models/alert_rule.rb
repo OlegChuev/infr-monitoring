@@ -1,14 +1,26 @@
 class AlertRule < ApplicationRecord
-  METRIC_TYPES = %w[cpu_usage memory_usage disk_usage].freeze
-  OPERATORS = %w[> < >= <= ==].freeze
-  SEVERITIES = %w[critical warning info].freeze
-
   has_many :automated_responses, dependent: :destroy
-  accepts_nested_attributes_for :automated_responses, allow_destroy: true
+  has_many :telegraf_cpu_configs
+  has_many :telegraf_ram_configs
 
-  validates :metric_type, presence: true, inclusion: { in: METRIC_TYPES }
-  validates :operator, presence: true, inclusion: { in: OPERATORS }
-  validates :threshold, presence: true, numericality: true
-  validates :severity, presence: true, inclusion: { in: SEVERITIES }
-  validates :duration, presence: true, format: { with: /\A\d+[smh]\z/ }
+  validates :name, presence: true
+  validates :metric_type, presence: true
+  validates :operator, presence: true
+  validates :threshold, presence: true
+  validates :severity, presence: true
+  validates :duration, presence: true
+
+  scope :active, -> { where(active: true) }
+
+  def self.operators
+    %w[> >= < <= == !=]
+  end
+
+  def self.severities
+    %w[info warning critical]
+  end
+
+  def self.metric_types
+    %w[cpu_usage memory_usage disk_usage]
+  end
 end

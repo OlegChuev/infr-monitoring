@@ -1,0 +1,13 @@
+<%= semantic_form_for [:admin, AutomatedResponse.new(alert_rule: alert_rule)] do |f| %>
+  <%= f.inputs "Add Response" do %>
+    <%= f.input :action_type, as: :select, collection: AutomatedResponse.action_types %>
+    <%= f.input :target_service, hint: "Required for restart_service action type" %>
+    <%= f.input :command, hint: "Required for run_command action type" %>
+    <%= f.input :cooldown_period, hint: "Format: 10s, 1m, 1h" %>
+    <%= f.input :active, as: :boolean, input_html: { checked: true } %>
+    <%= f.input :alert_rule_id, as: :hidden, input_html: { value: alert_rule.id } %>
+  <% end %>
+  <%= f.actions do %>
+    <%= f.action :submit, label: "Add Response" %>
+  <% end %>
+<% end %>

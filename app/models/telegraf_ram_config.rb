@@ -1,4 +1,4 @@
-class TelegrafCpuConfig < ApplicationRecord
+class TelegrafRamConfig < ApplicationRecord
   include TelegrafConfigurable
 
   private
@@ -9,12 +9,12 @@ class TelegrafCpuConfig < ApplicationRecord
   end
 
   def generate_host_config(host)
-    command = "ssh #{host.username}@#{host.hostname} cat /proc/stat | grep cpu"
+    command = "ssh #{host.username}@#{host.hostname} free -m"
     command += " -p #{host.port}" if host.port.present?
 
     <<~TOML
     
-      # Remote CPU monitoring via SSH for #{host.hostname}
+      # Remote RAM monitoring via SSH for #{host.hostname}
       [[inputs.exec]]
         commands = [
           "#{command}"
@@ -23,7 +23,7 @@ class TelegrafCpuConfig < ApplicationRecord
         interval = "#{interval}"
         data_format = "value"
         data_type = "string"
-        name_override = "cpu_remote_#{host.hostname.gsub('.', '_')}"
+        name_override = "memory_remote_#{host.hostname.gsub('.', '_')}"
       
         [inputs.exec.tags]
           host = "#{host.hostname}"

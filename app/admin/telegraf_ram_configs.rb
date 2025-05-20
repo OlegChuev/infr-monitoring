@@ -1,5 +1,5 @@
-ActiveAdmin.register TelegrafCpuConfig do
-  menu priority: 2, label: "CPU Monitoring"
+ActiveAdmin.register TelegrafRamConfig do
+  menu priority: 3, label: "RAM Monitoring"
 
   permit_params :name, :interval, :description, :active, :alert_rule_id, remote_host_ids: []
 
@@ -33,7 +33,7 @@ ActiveAdmin.register TelegrafCpuConfig do
     end
 
     panel "Assigned Hosts" do
-      table_for telegraf_cpu_config.remote_hosts do
+      table_for telegraf_ram_config.remote_hosts do
         column :hostname
         column :description
         column :status do |host|
@@ -47,12 +47,12 @@ ActiveAdmin.register TelegrafCpuConfig do
   end
 
   form do |f|
-    f.inputs "CPU Configuration Details" do
+    f.inputs "RAM Configuration Details" do
       f.input :name
       f.input :interval, hint: "Format: 10s, 1m, 1h (s: seconds, m: minutes, h: hours)"
       f.input :description
       f.input :active
-      f.input :alert_rule, collection: AlertRule.where(metric_type: 'cpu_usage')
+      f.input :alert_rule, collection: AlertRule.where(metric_type: 'memory_usage')
     end
 
     f.inputs "Monitored Hosts" do
@@ -68,7 +68,7 @@ ActiveAdmin.register TelegrafCpuConfig do
     attributes_table do
       row :active
       row "Config File" do |config|
-        path = Rails.root.join('config', 'telegraf', 'conf.d', "cpu_#{config.id}.conf")
+        path = Rails.root.join('config', 'telegraf', 'conf.d', "ram_#{config.id}.conf")
         if File.exist?(path)
           status_tag "Generated", class: "green"
         else
@@ -77,12 +77,12 @@ ActiveAdmin.register TelegrafCpuConfig do
       end
     end
     div do
-      button_to "Regenerate Config", regenerate_config_admin_telegraf_cpu_config_path(resource), method: :post, class: "button"
+      button_to "Regenerate Config", regenerate_config_admin_telegraf_ram_config_path(resource), method: :post, class: "button"
     end
   end
 
   member_action :regenerate_config, method: :post do
     TelegrafConfigService.generate(resource, resource.send(:config))
-    redirect_to admin_telegraf_cpu_config_path(resource), notice: "Configuration regenerated"
+    redirect_to admin_telegraf_ram_config_path(resource), notice: "Configuration regenerated"
   end
 end

@@ -1,79 +1,40 @@
 ActiveAdmin.register AlertRule do
-  menu label: "Alert Rules", priority: 3
+  menu priority: 4, label: "Alert Rules"
 
-  permit_params :metric_type, :operator, :threshold, :severity, :duration,
-                :description, :active, :host,
-                automated_responses_attributes: [:id, :action_type, :target_service, :cooldown_period, :description, :active, :_destroy]
+  permit_params :name, :metric_type, :operator, :threshold, :severity, :duration, :description, :active
 
-  config.clear_action_items!
+  filter :name
+  filter :metric_type
+  filter :severity
+  filter :active
+  filter :created_at
 
-  action_item :new, only: :index do
-    link_to "Add Alert Rule", new_admin_alert_rule_path
-  end
-
-  action_item :edit, only: :show do
-    link_to "Edit Alert Rule", edit_admin_alert_rule_path(resource)
-  end
-
-  action_item :delete, only: :show do
-    link_to "Delete Alert Rule", admin_alert_rule_path(resource),
-            method: :delete,
-            data: { confirm: "Are you sure you want to delete this alert rule?" }
-  end
-
-  index title: "Alert Rules" do
+  index do
     selectable_column
     id_column
+    column :name
     column :metric_type
     column :operator
     column :threshold
-    column :severity
-    column :host
+    column :severity do |rule|
+      status_tag rule.severity
+    end
+    column :duration
     column :active
-    column "Responses" do |rule|
-      rule.automated_responses.count
-    end
     actions
-  end
-
-  form do |f|
-    f.inputs "Alert Rule Details" do
-      f.input :metric_type, as: :select, collection: AlertRule::METRIC_TYPES
-      f.input :operator, as: :select, collection: AlertRule::OPERATORS
-      f.input :threshold
-      f.input :severity, as: :select, collection: AlertRule::SEVERITIES
-      f.input :duration, hint: "Format: 10s, 1m, 1h"
-      f.input :description
-      f.input :host, hint: "Leave blank for all hosts"
-    end
-
-    f.inputs "Automated Responses" do
-      f.has_many :automated_responses, allow_destroy: true, heading: false do |r|
-        r.input :action_type, as: :select, collection: AutomatedResponse::ACTIONS
-        r.input :target_service
-        r.input :cooldown_period, hint: "Format: 10s, 1m, 1h"
-        r.input :description
-        r.input :active
-      end
-    end
-
-    f.inputs "Status" do
-      f.input :active
-    end
-
-    f.actions
   end
 
   show do
     attributes_table do
-      row :id
+      row :name
       row :metric_type
       row :operator
       row :threshold
-      row :severity
+      row :severity do |rule|
+        status_tag rule.severity
+      end
       row :duration
       row :description
-      row :host
       row :active
       row :created_at
       row :updated_at
@@ -85,8 +46,50 @@ ActiveAdmin.register AlertRule do
         column :target_service
         column :cooldown_period
         column :active
-        column :description
+        column :actions do |response|
+          link_to "View", admin_automated_response_path(response)
+        end
       end
     end
+
+    panel "Associated CPU Configurations" do
+      table_for alert_rule.telegraf_cpu_configs do
+        column :name
+        column :interval
+        column :active
+        column :actions do |config|
+          link_to "View", admin_telegraf_cpu_config_path(config)
+        end
+      end
+    end
+
+    panel "Associated RAM Configurations" do
+      table_for alert_rule.telegraf_ram_configs do
+        column :name
+        column :interval
+        column :active
+        column :actions do |config|
+          link_to "View", admin_telegraf_ram_config_path(config)
+        end
+      end
+    end
+  end
+
+  form do |f|
+    f.inputs "Alert Rule Details" do
+      f.input :name
+      f.input :metric_type, as: :select, collection: AlertRule.metric_types
+      f.input :operator, as: :select, collection: AlertRule.operators
+      f.input :threshold
+      f.input :severity, as: :select, collection: AlertRule.severities
+      f.input :duration, hint: "Format: 10s, 1m, 1h (s: seconds, m: minutes, h: hours)"
+      f.input :description
+      f.input :active
+    end
+    f.actions
+  end
+
+  sidebar "Add Response", only: :show do
+    render partial: 'admin/alert_rules/add_response_form', locals: { alert_rule: resource }
   end
 end
